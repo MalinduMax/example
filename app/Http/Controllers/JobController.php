@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\JobPosted;
 use App\Models\Job;
-use App\Models\User;
+use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 class JobController extends Controller
@@ -19,7 +24,9 @@ class JobController extends Controller
 
     public function create()
     {
+
         return view('jobs.create');
+
     }
 
     public function show(Job $job)
@@ -27,18 +34,24 @@ class JobController extends Controller
         return view('jobs.show', ['job' => $job]);
     }
 
-    public function store()
+    public function store(Job $job, Request $request)
     {
         request()->validate([
             'title' => ['required', 'min:3'],
             'salary' => ['required']
         ]);
-        Job::create([
-            'title' => request('title'),
-            'salary' => request('salary'),
-            'employer_id' => 1
-        ]);
 
+        $file = $request->hasFile(('image'));
+        if($file){
+            $newFile = $request->file('image');
+            $filePath = $newFile->store('public/storage');
+            Job::create([
+                'title' => $request->title,
+                'salary' => $request->salary,
+                'src' => $filePath,
+                'employer_id' => 1
+            ]);
+        }
         return redirect('/jobs');
     }
 
@@ -50,20 +63,33 @@ class JobController extends Controller
         return view('jobs.edit', ['job' => $job]);
     }
 
-    public function update(Job $job)
+    public function update(Job $job, Request $request)
     {
         request()->validate([
             'title' => ['required', 'min:3'],
-            'salary' => ['required']
+            'salary' => ['required'],
         ]);
         //authorize
 
-        $job->update([
-            'title' => request('title'),
-            'salary' => request('salary'),
-        ]);
+        if ($request->hasFile('image')) {
+            $destination = 'public/storage'. $job->src;
+            if(File::exists($destination))
+            {
+                File::delete($destination);
+            }
+            $file = $request->file('image');
+            $name = $file->store('public/storage');
+            $job->update([
+                'title' => request('title'),
+                'salary' => request('salary'),
+                'src' => $name,
+            ]);
+        }
 
-        return redirect('/jobs/' .  $job->id);
+
+
+
+        return redirect('/jobs');
     }
 
     public function delete(Job $job)

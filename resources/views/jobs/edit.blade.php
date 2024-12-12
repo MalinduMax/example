@@ -3,13 +3,23 @@
         Edit Job: {{ $job->title }}
     </x-slot:heading>
 
-    <form method="POST" action="/jobs/{{  $job->id }}">
+    <form method="POST" action="/jobs/{{  $job->id }}" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
 
         <div class="space-y-12">
           <div class="pb-12 border-b border-gray-900/10">
-
+            <div class="col-span-full">
+                <label for="photo" class="block text-sm/6 font-medium text-gray-900">Photo</label>
+                <div class="mt-2 flex items-center gap-x-3">
+                    <div class="col-span-full">
+                        <div class=" flex items-center gap-x-3">
+                            <img class="size-20 border-2 border-blue-500 rounded-full" src={{ $job['src'] }} alt="no logo">
+                        </div>
+                    </div>
+                  <input type="file" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" name="image" id="image"/>
+                </div>
+            </div>
             <div class="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div class="sm:col-span-4">
                 <label for="title" class="block font-medium text-gray-900 text-sm/6">Title</label>

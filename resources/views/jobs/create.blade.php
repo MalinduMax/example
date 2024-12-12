@@ -3,7 +3,7 @@
         Create Job
     </x-slot:heading>
 
-    <form method="POST" action="/jobs">
+    <form method="POST" action="/jobs" enctype="multipart/form-data">
         @csrf
         <div class="space-y-12">
           <div class="pb-12 border-b border-gray-900/10">
@@ -12,6 +12,7 @@
 
             <div class="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-6">
               <x-form-field>
+                <input type="file" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" name="image" />
                 <x-form-label for="title">Title</x-form-label>
                 <div class="mt-2">
                   <x-form-input name="title" id="title" placeholder="CEO"/>
