@@ -41,17 +41,19 @@ class JobController extends Controller
             'salary' => ['required']
         ]);
 
-        $file = $request->hasFile(('image'));
-        if($file){
-            $newFile = $request->file('image');
-            $filePath = $newFile->store('public/storage');
-            Job::create([
-                'title' => $request->title,
-                'salary' => $request->salary,
-                'src' => $filePath,
-                'employer_id' => 1
-            ]);
+        $job->title = $request->input('title');
+        $job->salary = $request->input('salary');
+        $job->id = 1;
+        if($file = $request->hasFile('image'))
+        {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $name = time().'.'.$extension;
+            $file->move('public/storage',$name);
+            $job->src=$name;
         }
+        $job->src = $request->input('src');
+        
         return redirect('/jobs');
     }
 

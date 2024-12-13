@@ -14,7 +14,7 @@
                 <div class="mt-2 flex items-center gap-x-3">
                     <div class="col-span-full">
                         <div class=" flex items-center gap-x-3">
-                            <img class="size-20 border-2 border-blue-500 rounded-full" src={{ $job['src'] }} alt="no logo">
+                            <img class="size-20 border-2 border-blue-500 rounded-full" src="{{ asset('public/storage/'.$job->src) }}" alt="no logo">
                         </div>
                     </div>
                   <input type="file" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" name="image" id="image"/>
