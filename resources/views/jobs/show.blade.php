@@ -3,10 +3,10 @@
         Job
     </x-slot:heading>
     <div class="col-span-full">
-        <div class=" flex items-center gap-x-3">
+        <div class="flex items-center  gap-x-3">
             <div class="col-span-full">
-                <div class=" flex items-center gap-x-3">
-                    <img class="size-16 border-2 border-blue-500 rounded-full" src="{{ asset('public/storage/'.$job->src) }}" alt="no logo">
+                <div class="flex items-center  gap-x-3">
+                    <img class="border-2 border-blue-500 rounded-full size-16" src="{{ asset('public/storage/'.$job->src) }}" alt="no logo">
                 </div>
             </div>
         </div>

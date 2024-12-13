@@ -16,10 +16,16 @@ use Illuminate\Support\Facades\Route;
 
 class JobController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $jobs = Job::with('employer')->latest()->simplePaginate(3);
-        return view('jobs.index', ['jobs' => $jobs]);
+        $search = $request->search??null;
+        if($search)
+        {
+            $jobs = Job::where('title','like','%'.$search.'%')->get();
+        }else{
+            $jobs = Job::with('employer')->latest()->simplePaginate(10);
+        }
+        return view('jobs.index', compact('jobs','search'));
     }
 
     public function create()
@@ -38,21 +44,20 @@ class JobController extends Controller
     {
         request()->validate([
             'title' => ['required', 'min:3'],
-            'salary' => ['required']
+            'salary' => ['required'],
         ]);
 
-        $job->title = $request->input('title');
-        $job->salary = $request->input('salary');
-        $job->id = 1;
-        if($file = $request->hasFile('image'))
-        {
-            $file = $request->file('image');
-            $extension = $file->getClientOriginalExtension();
-            $name = time().'.'.$extension;
-            $file->move('public/storage',$name);
-            $job->src=$name;
+        $file = $request->hasFile('image');
+        if($file){
+            $newFile = $request->file('image');
+            $filePath = $newFile->store('public/storage');
+            Job::create([
+                'title' => $request->title,
+                'salary' => $request->salary,
+                'src' => $filePath,
+                'employer_id' => 1
+            ]);
         }
-        $job->src = $request->input('src');
         
         return redirect('/jobs');
     }
@@ -99,4 +104,9 @@ class JobController extends Controller
         $job->delete();
         return redirect('/jobs');
     }
+
 }
+
+        
+        
+        

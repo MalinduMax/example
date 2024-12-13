@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 Route::view('/', 'home');
 Route::view('/contact', 'contact');
 
-Route::get('/jobs', [JobController::class, 'index']);
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/create', [JobController::class, 'create']);
 Route::get('/jobs/{job}', [JobController::class, 'show']);
 Route::post('/jobs', [JobController::class, 'store'])->middleware('auth');

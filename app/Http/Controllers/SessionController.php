@@ -38,4 +38,9 @@ class SessionController extends Controller
 
         return redirect('/');
     }
+
+    public function jobSearch(Request $request)
+    {    
+        return redirect('/jobs');
+    }
 }
