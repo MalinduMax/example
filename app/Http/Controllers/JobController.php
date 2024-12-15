@@ -18,16 +18,21 @@ class JobController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->search??null;
-        if($search)
-        {
-            $jobs = Job::where('title','like','%'.$search.'%')->get();
-        }else{
-            $jobs = Job::with('employer')->latest()->simplePaginate(10);
-        }
-        return view('jobs.index', compact('jobs','search'));
-    }
+        $search = $request->input('search', null);
 
+        // Start the query
+        $query = Job::with('employer')->latest();
+
+        // If there's a search term, modify the query
+        if ($search) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        // Paginate the results
+        $jobs = $query->simplePaginate(10);
+
+        return view('jobs.index', compact('jobs', 'search'));
+    }
     public function create()
     {
 
@@ -58,7 +63,7 @@ class JobController extends Controller
                 'employer_id' => 1
             ]);
         }
-        
+
         return redirect('/jobs');
     }
 
@@ -107,6 +112,5 @@ class JobController extends Controller
 
 }
 
-        
-        
-        
+
+
